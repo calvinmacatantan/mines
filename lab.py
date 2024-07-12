@@ -1,13 +1,5 @@
-"""
-6.101 Lab 7:
-Six Double-Oh Mines
-"""
-#!/usr/bin/env python3
-
 import typing
 import doctest
-
-# NO ADDITIONAL IMPORTS ALLOWED!
 
 
 def dump(game):
@@ -28,7 +20,6 @@ def dump(game):
 
 
 # 2-D IMPLEMENTATION
-
 
 def is_visible(game, row, col):
     """
@@ -262,18 +253,26 @@ def new_game_nd(dimensions, mines):
             return [create_visible(dim[1:]).copy() for _ in range(dim[0])]
 
     def assign_mine(board, mine_loc):
+        """
+        board: a list representation of the minesweeper board
+        mine_loc: a tuple of arbitraty length containing the coordinates of a mine
+        """
         if len(mine_loc) == 1:
             board[mine_loc[0]] = "."
         else:
             assign_mine(board[mine_loc[0]], mine_loc[1:])
 
+    # new board
     board = create_board(dimensions)
 
+    # sets mines in board
     for location in mines:
         assign_mine(board, location)
 
+    # creates board of tile visibility
     visible = create_visible(dimensions)
 
+    # sets values for all tiles adjacent to mines
     for location in mines:
         for coordinate in get_neighbors(location, dimensions):
             value = get_value(coordinate, board)
@@ -292,12 +291,17 @@ def new_game_nd(dimensions, mines):
 
 def get_all_coordinates(dimensions):
     """
-    returns a set of all the coordients given a bound of dimensions
+    returns a set of all the coordinates given a bound of dimensions
     in the form of a tuple
     """
+    # lower bound coordinates are 0
+    # upper bound coordinates are the dimensions of the board, minus one
     dim_bound = tuple(val - 1 for val in dimensions)
+
     coordinates = {dim_bound}
+
     to_visit = {dim_bound}
+
     while to_visit:
         to_add = set()
         for i, dim in enumerate(dimensions):
